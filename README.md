@@ -3,10 +3,6 @@
 
 ## Documentation
 
-Refer this link for documentation: https://devopscube.com/kubernetes-cluster-vagrant/
-
-If you are preparing for CKA, CKAD, CKS or KCNA exam, save $57 using code **SCOFFER15** at https://kube.promo/latest
-
 Current k8s version for CKA, CKAD and CKS exam: 1.22
 
 ## Prerequisites
@@ -22,16 +18,6 @@ Latest version of Virtualbox for Mac/Linux can cause issues because you have to 
 So that the host only networks can be in any range, not just 192.168.56.0/21 as described here:
 https://discuss.hashicorp.com/t/vagrant-2-2-18-osx-11-6-cannot-create-private-network/30984/23
  
-## Usage/Examples
-
-To provision the cluster, execute the following commands.
-
-```shell
-git clone https://github.com/scriptcamp/vagrant-kubeadm-kubernetes.git
-cd vagrant-kubeadm-kubernetes
-vagrant up
-```
-
 ## Set Kubeconfig file varaible.
 
 ```shell
@@ -62,25 +48,4 @@ cd configs
 cat token
 ```
 
-## To shutdown the cluster, 
-
-```shell
-vagrant halt
-```
-
-## To restart the cluster,
-
-```shell
-vagrant up
-```
-
-## To destroy the cluster, 
-
-```shell
-vagrant destroy -f
-```
-
-## Centos & HA based Setup
-
-If you want Centos based setup, please refer https://github.com/marthanda93/VAAS
   
