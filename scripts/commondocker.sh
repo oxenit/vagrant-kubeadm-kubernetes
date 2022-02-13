@@ -51,10 +51,44 @@ sudo apt install -y \
     ca-certificates \
     curl \
     gnupg \
-    lsb-release \
-    containerd
+    lsb-release
+
+#Add Docker’s official GPG key:
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+#set up the stable repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+#Install Docker Engine
+sudo apt update -y
+sudo apt install -y docker-ce docker-ce-cli containerd.io
+
+# Following configurations are recomended in the kubenetes documentation for Docker runtime. Please refer https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker
+cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
+#Configure containerd
+sudo mkdir -p /etc/containerd
+containerd config default | sudo tee /etc/containerd/config.toml
+
+#restart containerd
+sudo systemctl restart containerd
 
 echo "ContainerD Runtime Configured Successfully"
+
+#Installing kubeadm, kubelet and kubectl
+sudo apt update -y 
+sudo apt install -y apt-transport-https ca-certificates curl
 
 #Google Cloud public signing key
 sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg

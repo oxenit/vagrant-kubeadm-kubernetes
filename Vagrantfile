@@ -3,6 +3,9 @@ IP_NW="10.0.0."
 IP_START=10
 
 Vagrant.configure("2") do |config|
+    config.vm.provider "libvirt" do |libvirt|
+        libvirt.management_network_address = '192.169.121.0/24'
+    end
     config.vm.synced_folder "./", "/vagrant", type: "nfs"
     config.vm.provision "shell", inline: <<-SHELL
         apt-get update -y
@@ -10,7 +13,7 @@ Vagrant.configure("2") do |config|
         echo "$IP_NW$((IP_START+1))  worker-node01" >> /etc/hosts
         echo "$IP_NW$((IP_START+2))  worker-node02" >> /etc/hosts
     SHELL
-    config.vm.box = "bento/ubuntu-21.10"
+    config.vm.box = "bento/ubuntu-20.04"
     config.vm.box_check_update = true
 
     config.vm.define "master" do |master|
@@ -19,7 +22,7 @@ Vagrant.configure("2") do |config|
       master.vm.provider "libvirt" do |vb|
           vb.memory = 4048
           vb.cpus = 2
-          vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+          #vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       end
       master.vm.provision "shell", path: "scripts/common.sh"
       master.vm.provision "shell", path: "scripts/master.sh"
@@ -32,7 +35,7 @@ Vagrant.configure("2") do |config|
         node.vm.provider "libvirt" do |vb|
             vb.memory = 2048
             vb.cpus = 1
-            vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+            #vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
         end
         node.vm.provision "shell", path: "scripts/common.sh"
         node.vm.provision "shell", path: "scripts/node.sh"
