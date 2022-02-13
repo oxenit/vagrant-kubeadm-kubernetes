@@ -24,8 +24,9 @@ Vagrant.configure("2") do |config|
           vb.cpus = 2
           #vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       end
-      master.vm.provision "shell", path: "scripts/common.sh"
-      master.vm.provision "shell", path: "scripts/master.sh"
+      master.vm.provision "linuxmaster", type: "shell", path: "scripts/linuxprep.sh"
+      master.vm.provision "commonmaster", type: "shell", path: "scripts/common.sh"
+      master.vm.provision "master", type: "shell", path: "scripts/master.sh"
     end
 
     (1..NUM_WORKER_NODES).each do |i|
@@ -37,8 +38,9 @@ Vagrant.configure("2") do |config|
             vb.cpus = 1
             #vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
         end
-        node.vm.provision "shell", path: "scripts/common.sh"
-        node.vm.provision "shell", path: "scripts/node.sh"
+        node.vm.provision "linuxnode", type: "shell", path: "scripts/linuxprep.sh"
+        node.vm.provision "commonnode", type: "shell", path: "scripts/common.sh"
+        node.vm.provision "node", after: "master", type: "shell", path: "scripts/node.sh"
       end
     end
   end

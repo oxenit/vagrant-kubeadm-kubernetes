@@ -8,8 +8,6 @@ sudo swapoff -a
 # keeps the swaf off during reboot
 sudo sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
 
-sudo sed -i 's|http://us.|http://|g' /etc/apt/sources.list
-
 #Letting iptables see bridged traffic 
 lsmod | grep br_netfilter
 sudo modprobe br_netfilter
